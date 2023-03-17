@@ -1,46 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { PagesList } from "./PagesList";
+import React from "react";
 
-// import and prepend the api url to any fetch calls
-import apiURL from "../api";
+import MainView from "./MainView";
 
 export const App = () => {
-  const [pages, setPages] = useState([]);
-  const [currentPage, setCurrentPage] = useState(null);
-
-  async function fetchPages() {
-    try {
-      const response = await fetch(`${apiURL}/wiki`);
-      const pagesData = await response.json();
-      setPages(pagesData);
-    } catch (err) {
-      console.log("Oh no an error! ", err);
-    }
-  }
-
-  async function fetchPage(pageSlug) {
-    try {
-      const response = await fetch(`${apiURL}/wiki/${pageSlug}`);
-      const pageData = await response.json();
-      setCurrentPage(pageData);
-    } catch (err) {
-      console.log("Oh no an error! ", err);
-    }
-  }
-
-  useEffect(() => {
-    console.log("currentpage is ", currentPage);
-  }, [currentPage]);
-
-  useEffect(() => {
-    fetchPages();
-  }, []);
-
   return (
     <main>
       <h1>WikiVerse</h1>
       <h2>An interesting 📚</h2>
-      <PagesList pages={pages} onClick={fetchPage} />
+      <MainView />
     </main>
   );
 };
