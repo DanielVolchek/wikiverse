@@ -42,6 +42,13 @@ const Details = ({ page, clearCurrentPage }) => {
     console.log("page is ", page);
   }, []);
 
+  const handleDelete = async () => {
+    await fetch(`${apiURL}/wiki/${page.slug}`, {
+      method: "DELETE",
+    });
+    clearCurrentPage();
+  };
+
   return (
     <div>
       <Title title={page.title} />
@@ -52,6 +59,7 @@ const Details = ({ page, clearCurrentPage }) => {
       {/* content */}
       <Property name="content" value={page.content} />
       <Tags tags={page.tags} />
+      <button onClick={handleDelete}>Delete Page</button>
       <button onClick={clearCurrentPage}>Return To Titles</button>
     </div>
   );
