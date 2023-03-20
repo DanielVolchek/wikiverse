@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import apiURL from "../api";
 
 const Title = ({ title }) => {
   return <h1>{title}</h1>;

@@ -12,8 +12,10 @@ const MainView = () => {
   async function fetchPages() {
     try {
       const response = await fetch(`${apiURL}/wiki`);
+      console.log("response is ", response);
       const pagesData = await response.json();
-      setPages(pagesData);
+      if (JSON.stringify(pages) !== JSON.stringify(pagesData))
+        setPages(pagesData);
       console.log("pagesData is ", pagesData);
     } catch (err) {
       console.log("Oh no an error! ", err);
@@ -42,17 +44,23 @@ const MainView = () => {
     fetchPages();
   }, []);
 
+  if (showingForm) {
+    return <WikiForm resetShowForm={() => setShowingForm(() => false)} />;
+  }
+
   return (
     <div>
       {!currentPage ? (
-        <PagesList pages={pages} fetchPage={fetchPage} />
-      ) : !showingForm ? (
-        <Details page={currentPage} clearCurrentPage={clearCurrentPage} />
+        <div>
+          <PagesList
+            pages={pages}
+            fetchPage={fetchPage}
+            fetchPages={fetchPages}
+          />
+          <button onClick={() => setShowingForm(() => true)}>Show Form</button>
+        </div>
       ) : (
-        <WikiForm resetShowForm={() => setShowingForm(() => false)} />
-      )}
-      {!showingForm && (
-        <button onClick={() => setShowingForm(() => true)}>Show Form</button>
+        <Details page={currentPage} clearCurrentPage={clearCurrentPage} />
       )}
     </div>
   );

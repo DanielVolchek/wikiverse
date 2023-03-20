@@ -1,10 +1,11 @@
 import { useState } from "react";
+import apiUrl from "../api";
 
 const initialFormObject = {
   title: "",
   content: "",
-  authorName: "",
-  authorEmail: "",
+  name: "",
+  email: "",
   tags: "",
 };
 
@@ -14,7 +15,9 @@ const WikiForm = ({ resetShowForm }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    await fetch("http://localhost:3000/wiki", {
+    console.log("handlesubmit");
+    console.log("formObject is ", formObject);
+    const res = await fetch(`${apiUrl}/wiki`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -22,13 +25,23 @@ const WikiForm = ({ resetShowForm }) => {
       body: JSON.stringify(formObject),
     });
 
+    const data = await res.json();
+    console.log("data is ", data);
+    if (data.error) {
+      alert("Failed to create page, consult console");
+      console.log("error is ");
+      console.error(data.error);
+    } else {
+      alert("Page created successfully");
+    }
+
     setFormObject({ ...initialFormObject });
 
     resetShowForm();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="form">
       <label htmlFor="title">Title:</label>
       <input
         type="text"
@@ -52,19 +65,17 @@ const WikiForm = ({ resetShowForm }) => {
       <input
         type="text"
         name="authorName"
-        value={formObject.authorName}
-        onChange={(e) =>
-          setFormObject({ ...formObject, authorName: e.target.value })
-        }
+        value={formObject.name}
+        onChange={(e) => setFormObject({ ...formObject, name: e.target.value })}
         required
       />
       <label htmlFor="authorEmail">Author Email:</label>
       <input
         type="email"
         name="authorEmail"
-        value={formObject.authorEmail}
+        value={formObject.email}
         onChange={(e) =>
-          setFormObject({ ...formObject, authorEmail: e.target.value })
+          setFormObject({ ...formObject, email: e.target.value })
         }
         required
       />
@@ -77,6 +88,14 @@ const WikiForm = ({ resetShowForm }) => {
         required
       />
       <button type="submit">Submit</button>
+      <button
+        onClick={() => {
+          setFormObject({ ...initialFormObject });
+          resetShowForm();
+        }}
+      >
+        Cancel
+      </button>
     </form>
   );
 };

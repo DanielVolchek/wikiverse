@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Page } from "./Page";
 
-export const PagesList = ({ pages, fetchPage }) => {
+export const PagesList = ({ pages, fetchPage, fetchPages }) => {
+  useEffect(() => {
+    fetchPages();
+  }, []);
+
   return (
     <>
       {pages.map((page, idx) => {
